@@ -3,29 +3,40 @@
 ## Objective
 
 
-The Detection Lab project aimed to establish a controlled environment for simulating and detecting cyber attacks. The primary focus was to ingest and analyze logs within a Security Information and Event Management (SIEM) system, generating test telemetry to mimic real-world attack scenarios. This hands-on experience was designed to deepen understanding of network security, attack patterns, and defensive strategies.
+The objective of this project was to set up and configure a Security Operations Center (SOC) using Wazuh and TheHive for monitoring and responding to security incidents. Using Shuffle, the project involved creating a scalable, automated security monitoring system capable of detecting and responding to threats.
+
 
 ### Skills Learned
 
 
-- Advanced understanding of SIEM concepts and practical application.
-- Proficiency in analyzing and interpreting network logs.
-- Ability to generate and recognize attack signatures and patterns.
-- Enhanced knowledge of network protocols and security vulnerabilities.
-- Development of critical thinking and problem-solving skills in cybersecurity.
+- Setting up and configuring cloud-based security tools.
+- Installing and managing Wazuh for threat detection.
+- Installing and managing TheHive for case management.
+- Configuring Sysmon on Windows machines and integrating it with Wazuh for enhanced logging and detection.
+- Creating custom alerts and rules in Wazuh.
+- Implementing a SOAR by automating security workflows with Shuffle.
+- Integrating external APIs like VirusTotal for threat intelligence enrichment.
+- Utilizing Linux command-line tools for system administration and configuration management.
+- Configuration of data storage and indexing engines (Cassandra, Elasticsearch).
+- Cyber threat intelligence and response automation
 
 ### Tools Used
 
 
-- Security Information and Event Management (SIEM) system for log ingestion and analysis.
-- Network analysis tools (such as Wireshark) for capturing and examining network traffic.
-- Telemetry generation tools to create realistic network traffic and attack scenarios.
+- Cloud Service Provider: Used to deploy Ubuntu machines.
+- Wazuh: Open-source security monitoring tool.
+- TheHive: Security incident response platform.
+- Sysmon: System Monitor for Windows.
+- Cassandra: Data storage for TheHive.
+- Elasticsearch: Data indexing engine for TheHive.
+- Shuffle: Automation platform for security operations.
+- VirusTotal: Online threat intelligence platform. 
+- Windows 10 VM: Used as a Wazuh agent.
+- Ubuntu: Used for Wazuh and TheHive servers as well as one of the Agents.
 
 ## Steps
-drag & drop screenshots here or use imgur and reference them using imgsrc
 
-Every screenshot should have some text explaining what the screenshot is about.
 
-Example below.
+
 
 *Ref 1: Network Diagram*
