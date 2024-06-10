@@ -46,3 +46,105 @@ The objective of this project was to set up and configure a Security Operations 
     <td><img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/c9345f60-5586-4249-a3a2-3631fca9c4ac" width="1300"/></td>
   </tr>
 </table>
+
+
+### Pre-Setup
+I deployed 3 Ubuntu machines from a CSP (cloud service provider), for running Wazuh and TheHive in the cloud. The 3rd one will be used as a Wazuh agent. I put Wazuh and Thehive behind a firewall to allow inbound traffic from my personal public address on port 22 for management, and another rule to allow traffic from the Agents. I installed a Windows 10 VM to use as a Wazuh agent, and I installed Sysmon on that machine as well. 
+
+### Installation and Configuration of Wazuh and TheHive in the Cloud 
+#### Wazuh Installation
+After deploying the machine and, before starting to do anything it is important to update our system.
+
+`apt-get update && apt-get upgrade -y`
+
+When finished let’s install Wazuh Dashboard. 
+
+**Source:** https://documentation.wazuh.com/current/installation-guide/wazuh-dashboard/installation-assistant.html
+
+`curl -sO https://packages.wazuh.com/4.7/wazuh-install.sh && sudo bash ./wazuh-install.sh -a`
+
+When the installation was completed I took note of the username and password to access Wazuh Dashboard. 
+To see all the Wazuh passwords I can go anytime to read the file `wazuh-passwords.txt` that is inside `wazuh-install-files.tar`
+
+I run `sudo tar -xvf wazuh-install-files.tar`  to extract it and, `cat wazuh-passwords.txt` to display it.
+
+Next, I used the public IP address of the Wazuh server to access the dashboard: `https://165.XXX.XXX.XXX/` and log in with the username and password that was shown after the installation.
+<p align="center">
+<br/>
+Wazuh Dashboard Log-in Page
+<br/>
+<br/>  
+<img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/4d11084d-953a-463a-b617-cdad68b7c1e7" height="50%" width="50%" alt="Wazuh Dashboard"/>
+<br/>
+<br/>Screenshot of Wazuh Dashboard
+<img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/2a5aaed9-74d0-4f60-b81c-900c8ba5cb54" height="80%" width="80%" alt="Wazuh Dashboard"/>
+</p>
+<br/>
+
+#### TheHive installation 
+On the second Ubuntu server; just like the one used to install Wazuh; before starting to do anything it is important to update our system.
+
+`apt-get update && apt-get upgrade -y`
+
+
+There are some prerequisites needed to be installed before the actual TheHive installation.
+
+Source: https://docs.strangebee.com/thehive/installation/step-by-step-installation-guide/#dependencies
+
+**The essential dependecies of TheHive's include:**
+
+- Java
+- Cassandra for robust data storage.
+- Elasticsearch serves as a powerful indexing engine
+
+**Dependencies:**
+<br/>
+```
+apt install wget gnupg apt-transport-https git ca-certificates ca-certificates-java curl  software-properties-common python3-pip lsb-release
+```
+
+**Java Installation:**
+<br/>
+```
+wget -qO- https://apt.corretto.aws/corretto.key | sudo gpg --dearmor  -o /usr/share/keyrings/corretto.gpg
+echo "deb [signed-by=/usr/share/keyrings/corretto.gpg] https://apt.corretto.aws stable main" |  sudo tee -a /etc/apt/sources.list.d/corretto.sources.list
+sudo apt update
+sudo apt install java-common java-11-amazon-corretto-jdk
+echo JAVA_HOME="/usr/lib/jvm/java-11-amazon-corretto" | sudo tee -a /etc/environment 
+export JAVA_HOME="/usr/lib/jvm/java-11-amazon-corretto"
+```
+
+**Cassandra Installation:**
+<br/>
+```
+wget -qO -  https://downloads.apache.org/cassandra/KEYS | sudo gpg --dearmor  -o /usr/share/keyrings/cassandra-archive.gpg
+echo "deb [signed-by=/usr/share/keyrings/cassandra-archive.gpg] https://debian.cassandra.apache.org 40x main" |  sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+sudo apt update
+sudo apt install cassandra
+```
+
+
+**ElasticSearch Installation:**
+<br/>
+```
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch |  sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
+sudo apt-get install apt-transport-https
+echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/7.x/apt stable main" |  sudo tee /etc/apt/sources.list.d/elastic-7.x.list
+sudo apt update
+sudo apt install elasticsearch
+```
+
+**TheHive Installation Itself:**
+<br/>
+```
+wget -O- https://archives.strangebee.com/keys/strangebee.gpg | sudo gpg --dearmor -o /usr/share/keyrings/strangebee-archive-keyring.gpg
+echo 'deb [signed-by=/usr/share/keyrings/strangebee-archive-keyring.gpg] https://deb.strangebee.com thehive-5.2 main' | sudo tee -a /etc/apt/sources.list.d/strangebee.list
+sudo apt-get update
+sudo apt-get install -y thehive
+```
+
+
+
+
+
+  
