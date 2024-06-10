@@ -39,4 +39,10 @@ The objective of this project was to set up and configure a Security Operations 
 
 
 
-*Ref 1: Network Diagram*
+### Network Diagram
+<table>
+  <tr>
+    <td><img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/1af47f1b-9b55-4bea-8a59-7e72aceb400b" width="700"/></td>
+    <td><img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/c9345f60-5586-4249-a3a2-3631fca9c4ac" width="800"/></td>
+  </tr>
+</table>
