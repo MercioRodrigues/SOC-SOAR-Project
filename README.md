@@ -324,7 +324,7 @@ The first thing I did was to change the default password by going to Settings in
 </br>
 
 #### So Far...
-At this point in the project we have:
+At this point in the project I have:
 - Installed Wazuh on one server in the cloud.
 - Installed and configured TheHive on one server in the cloud
 
