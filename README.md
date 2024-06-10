@@ -201,8 +201,8 @@ Changes:
 elasticsearch.yml
 <br/>
 <br/>
-<img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/42cc7a92-0862-4e01-bc52-d5baf5e5264b" height="50%" width="50%" alt="Cassandra yaml file"/>
-<img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/f581881e-b0a1-4616-8513-8721e2b21bc9" height="50%" width="50%" alt="Cassandra yaml file"/>
+<img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/42cc7a92-0862-4e01-bc52-d5baf5e5264b" height="50%" width="50%" alt="Elasticsearch yml file"/>
+<img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/f581881e-b0a1-4616-8513-8721e2b21bc9" height="50%" width="50%" alt="Elasticsearch yml file"/>
 </p>
 </br>
 </br>
@@ -210,7 +210,130 @@ elasticsearch.yml
 #### Configure TheHive
 
 Next, I am going to configure TheHive `application.conf` configuration file itself. 
-But first, let's check the permission of `thehive` folder. I have to make sure that <code style="color:Blue">thehive</code> user and group have access to the file pass. 
+But first, let's check the permission of thehive folder `/opt/thp`. I have to make sure that ${\color{blue}thehive}$ user and group have access to the file pass. 
+</br>
+</br>
+![Captura de ecrã 2024-05-31 162004](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/d34e5f59-b33e-46e7-bed8-22cd9abb8a05)
+</br>
+As we can see root has access to ${\color{blue}thehive}$ directory, we need to change this.
+</br>
+</br>
+I run `chown -R thehive:thehive /opt/thp` and double check with `ls -la /opt/thp`
+![Captura de ecrã 2024-05-31 162358](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/b4a69cbb-cd9d-4ad3-bda1-ca5c9622162e)
+</br>
+</br>
+Now is time to configure Thehive config file which, according to the documentation is called `application.conf`.
+</br>
+</br>
+`nano /etc/thehive/application.conf`
+</br>
+</br>
+Changes:
+- `hostname` IP address to our public Thehive address
+- `cluster-name` to the same name we gave to the cluster inside Cassandra config file.
+<p align="center">
+application.conf file
+</br>
+</br>
+<img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/b897247d-7af6-45ee-9cf1-39aa11ebaf55" height="50%" width="50%" alt="Thehive config file"/>
+</br>
+</br>
+A little down below we can read the following:
+</br>
+
+![Captura de ecrã 2024-05-31 163558](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/23817c4f-ef16-428d-a75a-0c923ea8e0ef)
+That is why I had to change the permission so Thehive could write in that directory. 
+</br>
+</br>
+Continuing to change the file, I have to change the application URL to match the IP of my Thehive server. 
+</br>
+![Captura de ecrã 2024-06-10 214137](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/bae2be8e-c70c-4087-bb97-ec27ca4a4659)
+
+</br>
+</br>
+By default, Thehive has both Cortex and MISP enabled, as we can see down below:
+</br>
+
+![Captura de ecrã 2024-05-31 164142](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/7b846dac-4b17-4e6a-bfc3-9889ef09c2fc)
+
+Cortex is used for data enrichment and response capability, and MISP is their CTI (cyber threat intelligence) platform.
+</br>
+</br>
+Next, start and enable `thehive` service, and check if it is active.
+
+```
+systemctl start thehive.service
+systemctl enable thehive.service
+systemctl status thehive.service
+```
+
+![Captura de ecrã 2024-05-31 165143](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/c6d65ab7-3d88-4453-98d1-ce307b10620a)
+
+</br>
+</br>
+
+**Recommended;**
+- Create the file `/etc/elasticsearch/jvm.options.d/jvm.options` if it doesn't exist. 
+- `nano /etc/elasticsearch/jvm.options.d/jvm.options`
+- Inside `jvm.options`, add the desired JVM options. I added mine like this:
+```
+-Dlog4j2.formatMsgNoLookups=true
+-Xms2g
+-Xmx2g
+```
+</br>
+</br> 
+
+From here if everything is ok I should be able to access Thehive by going to it’s public IP address on port 9000.
+${\color{blue}http://TheHive_ IP:9000}$
+
+</br>
+</br>
+<p align="center">
+THeHive Log-in Screen
+</br>
+</br>
+
+![Captura de ecrã 2024-05-31 165611](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/998a9619-aa4b-44fb-a6c3-ced0c0ac1072)
+
+</p>
+</br>
+</br>
+I login with the default credentials:
+
+**login:** admin@thehive.local
+</br>
+**password:** secret
+</br>
+**Important:** Make sure an inbound rule exists in the firewall to allow traffic on port 9000. We will need this setup otherwise Thehive will not receive alerts.
+</br>
+</br>
+<p align="center">
+TheHive Main Screen
+</br>
+</br>
+
+![Captura de ecrã 2024-05-31 171530](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/ba5c9fa1-63f1-42fe-a83d-a39b594dc4df)
+
+</p>
+</br>
+The first thing I did was to change the default password by going to Settings in the top right corner. 
+</br>
+</br>
+
+#### So Far...
+At this point in the project we have:
+- Installed Wazuh on one server in the cloud.
+- Installed and configured TheHive on one server in the cloud
+
+**This is the base lab configuration. From now on I can add agents to Wazuh. 
+Here the project splits into 2 parts, one for a Windows 10 VM agent and the other for an Ubuntu agent. Both parts despite having a similar flow have a difference in the end, the Windows part does not include responsive action while Ubuntu does. I created this difference to show how useful an automated responsive action can be.**
+
+
+
+
+
+
 
 
 
