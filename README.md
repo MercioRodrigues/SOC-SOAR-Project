@@ -285,7 +285,7 @@ systemctl status thehive.service
 </br> 
 
 From here if everything is ok I should be able to access Thehive by going to it’s public IP address on port 9000.
-${\color{blue}http://TheHive_IP:9000}$
+${\color{blue}http://TheHive_ip:9000}$
 
 </br>
 </br>
@@ -300,10 +300,12 @@ THeHive Log-in Screen
 </br>
 </br>
 I login with the default credentials:
+</br>
 
 **login:** admin@thehive.local
 </br>
 **password:** secret
+</br>
 </br>
 **Important:** Make sure an inbound rule exists in the firewall to allow traffic on port 9000. We will need this setup otherwise Thehive will not receive alerts.
 </br>
