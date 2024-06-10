@@ -54,14 +54,16 @@ I deployed 3 Ubuntu machines from a CSP (cloud service provider), for running Wa
 ### Installation and Configuration of Wazuh and TheHive in the Cloud 
 #### Wazuh Installation
 After deploying the machine and, before starting to do anything it is important to update our system.
-
-`apt-get update && apt-get upgrade -y`
+```
+apt-get update && apt-get upgrade -y
+```
 
 When finished let’s install Wazuh Dashboard. 
 
 **Source:** https://documentation.wazuh.com/current/installation-guide/wazuh-dashboard/installation-assistant.html
-
-`curl -sO https://packages.wazuh.com/4.7/wazuh-install.sh && sudo bash ./wazuh-install.sh -a`
+```
+curl -sO https://packages.wazuh.com/4.7/wazuh-install.sh && sudo bash ./wazuh-install.sh -a
+```
 
 When the installation was completed I took note of the username and password to access Wazuh Dashboard. 
 To see all the Wazuh passwords I can go anytime to read the file `wazuh-passwords.txt` that is inside `wazuh-install-files.tar`
@@ -142,7 +144,62 @@ echo 'deb [signed-by=/usr/share/keyrings/strangebee-archive-keyring.gpg] https:/
 sudo apt-get update
 sudo apt-get install -y thehive
 ```
+<br/>
+<br/>
 
+### Dependencies Configuration
+
+#### Configure Cassandra<br/>
+In order to configure Cassandra i have to edit `cassandra.yaml' file.
+```
+nano /etc/cassandra/cassandra.yaml
+```
+
+Changes: 	
+- **Cluster name** - I named mine “SOAR project”.
+- **Listen address** - I put my TheHive server public address.
+- **Rpc address** -  I put my TheHive server public address.
+- **Seeds** - TheHive_server_IP:7000
+
+**Remove Existing Data Before Starting Service:**
+I need to stop the service first. 
+```
+sudo systemctl stop cassandra.service
+```
+
+Since we installed Cassandra using their package we have to remove old files.
+```
+rm -rf /var/lib/cassandra/*
+```
+
+And finally, let's start and enable Cassandra so it can start automatically after boot. 
+```
+sudo systemctl start cassandra
+sudo systemctl enable cassandra
+``` 
+We can also check if its running...
+```
+sudo systemctl status cassandra
+``` 
+![Captura de ecrã 2024-05-31 153305](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/e1def0fe-2f1b-4cea-8fa0-c8c12500d3f4)
+<br/>
+<br/>
+#### Configure Elasticsearch
+
+Next we config another dependency, Elasticsearch used for managing data indices or in other words, querying data. 
+```
+nano /etc/elasticsearch/elasticsearch.yml
+```
+Changes: 
+- Cluster name to anything we want.  
+- Uncomment `node.name`
+- Put our Thehive machine ip after  `network.host`
+- By default the port is 9200 and I just uncomment it.
+- Under “Discovery” I uncomment `cluster.initial_master_nodes` and remove “node 2” since we are going to use only one. 
+<br/>
+
+<img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/42cc7a92-0862-4e01-bc52-d5baf5e5264b" height="50%" width="50%" alt="Cassandra yaml file"/>
+<img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/f581881e-b0a1-4616-8513-8721e2b21bc9" height="50%" width="50%" alt="Cassandra yaml file"/>
 
 
 
