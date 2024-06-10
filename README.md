@@ -197,10 +197,13 @@ Changes:
 - By default the port is 9200 and I just uncomment it.
 - Under “Discovery” I uncomment `cluster.initial_master_nodes` and remove “node 2” since we are going to use only one. 
 <br/>
-
+<p align="center">
+elasticsearch.yml
+<br/>
+<br/>
 <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/42cc7a92-0862-4e01-bc52-d5baf5e5264b" height="50%" width="50%" alt="Cassandra yaml file"/>
 <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/f581881e-b0a1-4616-8513-8721e2b21bc9" height="50%" width="50%" alt="Cassandra yaml file"/>
-
+</p>
 
 
 
