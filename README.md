@@ -204,6 +204,13 @@ elasticsearch.yml
 <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/42cc7a92-0862-4e01-bc52-d5baf5e5264b" height="50%" width="50%" alt="Cassandra yaml file"/>
 <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/f581881e-b0a1-4616-8513-8721e2b21bc9" height="50%" width="50%" alt="Cassandra yaml file"/>
 </p>
+</br>
+</br>
+
+#### Configure TheHive
+
+Next, I am going to configure TheHive `application.conf` configuration file itself. 
+But first, let's check the permission of `thehive` folder. I have to make sure that <code style="color:Blue">thehive</code> user and group have access to the file pass. 
 
 
 
