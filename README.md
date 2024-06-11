@@ -147,7 +147,7 @@ sudo apt-get install -y thehive
 <br/>
 <br/>
 
-### Dependencies Configuration
+### TheHive Dependencies Configuration
 
 #### Configure Cassandra<br/>
 In order to configure Cassandra i have to edit `cassandra.yaml' file.
