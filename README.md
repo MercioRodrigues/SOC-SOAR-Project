@@ -330,8 +330,10 @@ At this point in the project I have:
 
 **This is the base lab configuration. From now on I can add agents to Wazuh. 
 Here the project splits into 2 parts, one for a Windows 10 VM agent and the other for an Ubuntu agent. Both parts despite having a similar flow have a difference in the end, the Windows part does not include responsive action while Ubuntu does. I created this difference to show how useful an automated responsive action can be.**
+</br>
+</br>
 
-
+- [Windows Agent, mimikatz detection](https://github.com/MercioRodrigues/SOC-SOAR-Project/blob/9e183dcfc0fdd05ba061959b4121b8e56ea742bb/Windows_10_Agent.md)
 
 
 
