@@ -492,17 +492,94 @@ If so we can see all the info gathered by Virustotal, and by expanding the resul
 As we can see I got information back from Virustotal that 66 scans, rate it as malicious. Awesome!
 </br>
 </br>
-Now it’s time to add Thehive so Virustotal sends the enriched information to it, and creates an alert for case management. As always we add by dragging it in. 
+
+### TheHive
+Now it’s time to add TheHive and connect it to the Virustotal node so it can send the enriched IOC when creating an alert for case management. 
+</br>
+As always we add TheHive by dragging it in. 
 </br>
 </br>
-Before moving forward with Shuffle, let’s go to TheHive login page and authenticate.
+Before moving forward with Shuffle, let’s go to my TheHive login page and authenticate.
 I can see in the main panel that there is one organization called “admin”, we click on the plus button to add a new one. I called the new organization “SOC”.
-Opening the new organization created, I can from now on add users. 
 </br>
 </br>
-I am going to add 2, one normal and a Service account. 
-After creating those accounts I am going to set a new password for the normal account and create an API key for the service account, by selecting the account and clicking the preview button. 
-I Saved the API key since I am going to use it to authenticate with shuffle.
+![copiaCaptura de ecrã 2024-05-31 171530](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/a50b4d2d-c29d-4190-be6d-af0ef4995678)
+</br>
+</br>
+Opening up the new organization created, I can from now on add users. 
+</br>
+</br>
+I am going to add 2, one Normal type and one Service type account. 
+After creating those accounts I am going to set a new password for the Normal Type account and create an API key for the service account by clicking the preview button. 
+After generating it, I save the API key, since **I am going to use it to authenticate with shuffle.**
+<p align="center">
+    <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/a9b34958-e7cb-4970-8044-169a780c1d3f" height="60%" width="60%" alt="TheHive API key"/>
+</p>
+</br>
+</br>
 
+**Going back to Shuffle, I use the API key plus the address to my TheHive server, to authenticate inside TheHive node.**
+</br>
+</br>
+Now is the time to customize our alert. Selecting TheHive node, I change the action to Create Alert, and then I fill the paraments as I wish, using autocompletion and strings on some of them, in my case it goes like this:
+</br>
+</br>
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/f245b167-63d5-450e-86da-582248b8b37f" height="50%" width="50%" alt="TheHive Node"/>
+    </td>
+    <td align="center">
+      <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/14279e3e-bddd-48bb-b9c8-3cef7fe3710f" height="50%" width="50%" alt="TheHive Node"/>
+    </td>
+  </tr>
+</table>
+</br>
+</br>
+I test it by reruning the workflow. If we have a success status on everything and, after logging in to the Analyst account in TheHive, we should be able to see a new alert appearing.
 
+![Captura de ecrã 2024-06-02 224748](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/a551c764-da58-488a-b233-e674bdc1e9bc)
+</br>
+</br>
+Last but not least I will set up Shuffle to send an email to the Analyst with the alert and some info. We accomplish this by searching in Apps for **“email”**, then we drag and drop connected to Virustotal.
+</br>
+</br>
+<p align="center">
+    Final Workflow
+    </br>
+    </br>
+    <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/05679daa-bfb2-4689-b326-d3dace5dd12b" height="60%" width="60%" alt="Final Workflow"/>
+</p>
+</br>
+</br>
+
+Then I just fill in the fields required, like email **Recipients, Subject, and Body** as needed. 
+</br>
+Going to my email box will confirm that I have received it. 
+<p align="center">
+    Email
+    </br>
+    </br>
+    <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/b88d9cfd-ecd4-4eab-8709-4e2ae1a9e301 height="60%" width="60%" alt="Email"/>
+</p>
+</br>
+And I do! Awesome! And there you have it. 
+</br>
+</br>
+## Final Testing of all the Workflow
+Now time to test everything together by running Mimikatz on the Windows VM and see if everything is working correctly.
+</br>
+
+![Captura de ecrã 2024-06-03 142956](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/17c65592-9810-435d-ade9-a3aec792d787)
+
+![Captura de ecrã 2024-06-03 143041](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/1f0a74f9-ce28-40a0-97e5-3e8aa66ad00f)
+
+![Captura de ecrã 2024-06-03 143058](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/40854c3c-2878-43fc-92a2-e6af9da33783)
+</br>
+And yes both Wazuh, Thehive, and my Analyst email got the alert! 
+</br>
+</br>
+</br>
+
+**This concludes the Windows 10 Agent setup and workflow automation part of my SOC SOAR project.**
 
