@@ -417,13 +417,92 @@ How cool is that!?
 To accomplish this first I click on **“Change me”** and then under Find action I choose the option **“Regex capture group”**. For the input data I select **“Execution Argument”** and then **"hashes"**.
 </br>
 </br>
-For the regex, I had to use Chatgpt one more time, so it could create for me a regex to parse sha256 values. It should look like the image below. 	
+For the regex field, I had to use Chatgpt one more time, so it could create a regex to parse sha256 values. 
+</br>
+It should look like the image below. 	
+</br>
+<p align="center">
+    Regex Node
+    </br>
+    </br>
+    <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/d4143894-630b-43a4-91b1-9c736e277692" height="20%" width="20%" alt="sha256 regex"/>
+<p/>
+</br>
+</br>
+To check if it is working I go again to the “show executions” button and re-run the workflow, and then check if the result is the sha256 of mimikatz as shown below.
+</br>
+<p align="center">
+    Sha256 Regex Output
+    </br>
+    </br>
+    <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/cc9a0a5f-d5b3-41c9-8d61-137d8196ab25" height="60%" width="60%" alt="sha256 regex output"/>
+</p>
+</br>
+</br>
+
+**My workflow so far:** 
+</br>
+</br>
+<p align="center">
+ <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/d7ed7cec-8f4c-478a-99f5-1e5216ead3b5"  alt="Workflow so far"/>   
+</p>
+</br>
+</br>
+
+### Virustotal API
+Next, I want Virustotal to check the parsed hash and return the results. For this, we have to use its API.
+I need my **Virustotal API key**. To get it I went to their website into my account and copied it. 
+</br>
+</br>
+Back to Shuffle, I add Virustotal to apps first and then drag it inside my workflow and connect it to the regex node. 
+</br>
+<p align="center">
+Workflow
+</br>
+</br>
+ <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/85048edc-0974-4317-ab5f-66c1f8819959" height="60%" width="60%" alt="Workflow with Virustotal"/>   
+</p>
+</br>
+</br>
+
+Clicking on Virustotal brings up a window where I need to indicate what action I want to perform. I select on action **“get a hash report”**, then I used my Virustotal API key to authenticate.
+</br>
+In the **"Id"** parameter, I need to select our **"regex list"** as an autocompletion. We click save and then rerun workflow.
+</br>
+<p align="center">
+Virustotal node
+</br>
+</br>
+ <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/6009c87b-06d0-4fc3-9f0c-c37cbf5401ce" height="30%" width="30%" alt="Virustotal"/>   
+</p>
+</br>
+</br>
+If everything is ok, when I expand the Virustotal result we need to see the following:
+
+![Captura de ecrã 2024-06-12 212316](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/65ceda13-58dd-470f-8883-40465a8a7c73)
+</br>
+</br>
+If so we can see all the info gathered by Virustotal, and by expanding the results we will find a lot of information like the reputation score, that is very usufull in a investigation. 
+</br>
+</br>
+
+![Captura de ecrã 2024-06-02 195910](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/00c1df1f-756a-4682-8864-2dae64055756)
+</br>
+</br>
+As we can see I got information back from Virustotal that 66 scans, rate it as malicious. Awesome!
+</br>
+</br>
+Now it’s time to add Thehive so Virustotal sends the enriched information to it, and creates an alert for case management. As always we add by dragging it in. 
+</br>
+</br>
+Before moving forward with Shuffle, let’s go to TheHive login page and authenticate.
+I can see in the main panel that there is one organization called “admin”, we click on the plus button to add a new one. I called the new organization “SOC”.
+Opening the new organization created, I can from now on add users. 
+</br>
+</br>
+I am going to add 2, one normal and a Service account. 
+After creating those accounts I am going to set a new password for the normal account and create an API key for the service account, by selecting the account and clicking the preview button. 
+I Saved the API key since I am going to use it to authenticate with shuffle.
 
 
 
-
-
-
-
-
-  
