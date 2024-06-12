@@ -6,7 +6,7 @@ Welcome to the Window Agent part of my SOC SOAR Project. In this part I am going
 - Deploy a Wazuh agent on a Windows 10 VM
 - Set Wazuh to ingest Sysmon logs
 - Create a custom rule for Mimikatz
-- Run Mimikatz and check for alerts
+- Run Mimikatz with a different name and check for alerts
 - Automate workflow using Shuffle SOAR:
     
     - Enrich File hash IOC with Virustotal
