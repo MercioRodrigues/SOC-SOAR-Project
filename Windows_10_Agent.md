@@ -586,6 +586,6 @@ And yes both Wazuh, Thehive, and my Analyst email got the alert!
 Don't forget to check also the other part of my SOC SOAR Project:
 </br>
 
-[Ubuntu Agent, SSH Brute Force attack detection with automated Block IP Responsive action.](https://github.com/MercioRodrigues/SOC-SOAR-Project/blob/d4b3076136825897491e0291b57d38ee97619a72/Ubuntu_Server_agent_with_responsive_action.md)
+[Ubuntu Agent, SSH Brute Force attack detection with automated Block IP Responsive action.](https://github.com/MercioRodrigues/SOC-SOAR-Project/blob/main/Ubuntu_Server_agent_with_responsive_action.md)
 
 
