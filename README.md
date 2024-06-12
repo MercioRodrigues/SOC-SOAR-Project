@@ -1,4 +1,4 @@
-# SOC-SOAR-Project
+# SOC SOAR Project
 
 ## Objective
 
