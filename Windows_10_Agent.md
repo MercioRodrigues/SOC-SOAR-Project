@@ -1,7 +1,7 @@
 # Windows 10 VM Agent
 
 ## Introduction
-Welcome to this part of my SOC SOAR Project. In this part I am going to: 
+Welcome to the Window Agent part of my SOC SOAR Project. In this part I am going to: 
 </b>
 - Deploy a Wazuh agent on a Windows 10 VM
 - Set Wazuh to ingest Sysmon logs
