@@ -298,5 +298,132 @@ I used the MD5 hash and I confirm in fact that it is mimikatz.
 </br>
 ## Make it SOAR
 
+Let's take a break for me to explain my workflow for this part of the project. 
+</br>
+</br>
+Mimikatz alert is sent to shuffle   -»  Shuffle receives the alert and extracts the sha256 from the file 
+-» Check the reputation score with VirusTotal    -»   Send the details to TheHive to create an alert 
+-» Send an email to the SOC analyst 
+</br>
+</br>
+I am going to use Shuffle and Thehive to accomplish this. 
+**I will set up TheHive because I want to expose myself to a case management system.**
+</br>
+</br>
+### Shuffle
+After creating an account on the Shuffle website, I create a new workflow.
+</br>
+The page will look like this:
+<p align="center">
+Shuffle Workflow
+</p>
+<table>
+  <tr>  
+    </br>
+     <td><img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/bebb294c-ea94-4719-8692-9d2dc693478b"  alt="Shuffle Workflow"/></td>
+     <td><img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/d927c4f3-6c87-4465-b52a-bd4be46167d5" alt="Shuffle Workflow"/></td>
+  </tr> 
+</table>    
+Here we can add our "triggers" and “apps”.
+I select and drag a webhook inside our working area. 
+Selecting it will bring a window where I can name it and see the webhook URL. I copy it because I will need this later for the Wazuh Manager.
+</br>
+</br>
+
+Reference: _According to Shuffle documentation; “ Webhooks are the real-time handler for Shuffle data. Webhooks were initially implemented to handle data from Office365 connectors and TheHive, but have turned into a generic trigger, taking any kind of HTTP data, as we saw the need for it.”_
+</br>
+</br>
+
+<div style="display: flex; align-items: center;">
+  <img align="left" width="200" src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/893c8db8-7136-4f27-ac43-1a89f6e34a58"/>
+  <div style="margin-left: 10px;">Before going to Wazuh I need to change the call on “change me” by clicking on it. I deleted Hello World and added an Execution argument autocompletion. Like the image on the left.</div>
+  <br/>
+  <br/>
+  <div style="margin-left: 10px;">Next I go to my Wazuh manager server CLI and I need to instruct Wazuh to connect to shuffle. I can do this by adding what is called an "integration tag" into the ossec config file.</div>
+  <br/>
+  <pre style="background-color: rgba(0, 0, 0, 0.3); padding: 10px; border-radius: 5px; color: #ddd;">nano /var/ossec/etc/ossec.conf</pre>
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+I used Chatgpt to help me with this, and I changed and copied the following into `ossec.conf` file:
+<br/>
+<br/>
+
+```
+<integration>
+  <name>shuffle</name>
+  <hook_url>Webhook_URL</hook_url>
+  <alert_level>5</alert_level> 
+  <alert_format>json</alert_format>
+</integration>
+```
+<br/>
+<br/>
+
+The `<hook _url>` is the webhook url that I copied from Shuffle.
+On the alert level if we want to receive all alert levels we put 0 instead of 5. 
+In my case and for the purpose of this project and testing, I'm interested in receiving only  when it triggers the rule that I created in Wazuh, this rule if you remember have an ID of `100002`
+
+<br/>
+
+So I will replace the alert level line with `<rule_id>100002</rule_id>` instead.
+<br/>
+**Attention: be careful with indentation!**
+<br/>
+<br/>
+
+![Captura de ecrã 2024-06-02 154633](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/8d2ce367-7792-439c-9889-5da250ec9924)
+After saving I restart wazuh-manager service.
+
+`systemctl restart wazuh-manager.service`
+<br/>
+<br/>
+Now let's go to my Windows VM to generate an alert and check if it's working on shuffle. 
+I press the play button on my workflow, I execute mimikatz, and then I click on the “show executions” button, and I check if the alert is getting into Shuffle. 
+
+![Captura de ecrã 2024-06-02 181828](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/8efe7251-4e4e-44ee-8781-f75fd2dc792a)
+<br/>
+<br/>
+If everything was configured correctly, the alert should appear like the image above. 
+<br/>
+<br/>
+I can open the alert and check all the information from the alert. 
+<br/>
+How cool is that!?
+<br/>
+<br/>
+<p align="center">
+ Alert data inside Shuffle
+</br>
+</br>
+  <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/020640db-785e-464b-8116-6d167b8527a8" height="60%" width="60%" alt="Wazuh Agent Folder"/>
+<p/>
+</br>
+</br>
+
+**My next step is to make Shuffle use Virustotal to check the reputation of mimikatz using its sha256.**
+</br>
+</br>
+
+## Enriching Hash IOC
+</br>
+</br>
+
+To accomplish this first I click on **“Change me”** and then under Find action I choose the option **“Regex capture group”**. For the input data I select **“Execution Argument”** and then **"hashes"**.
+</br>
+</br>
+For the regex, I had to use Chatgpt one more time, so it could create for me a regex to parse sha256 values. It should look like the image below. 	
+
+
+
+
+
+
+
 
   
