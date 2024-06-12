@@ -187,9 +187,116 @@ Next let's download mimikatz. For that I had to make an exclusion on Windows sec
 
 ![Captura de ecrã 2024-06-08 171402](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/d7a1ca96-57ea-4ac4-8107-ad28d50b96c3)
 
+</br>
+</br>
 
+Next, I went to PowerShell and ran mimikatz:
+</br>
+</br>
 
+![Captura de ecrã 2024-06-01 140218](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/71fd2110-e8e2-4a66-9a62-f66ff5bca473)
+</br>
+</br>
+Let's go to Wazuh Discover mode select wazuh-archive and query for mimikatz.
+</br>
+</br>
 
+![Captura de ecrã 2024-06-01 143818](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/52149abc-6dac-4412-8572-4abe670f4117)
+</br>
+</br>
+And there it is!
+</br>
+</br>
+
+## Creating a Custom Rule
+What I want to do next is to start creating our alert.
+I see 2 events, I am interested in event **ID:1** because this will show process creations. If I open it and scroll down I can see a field called, `data.win.eventdata.originalFileName.` I am going to use this field to create our rule, **an attacker could easily change the name of the file to trick us**, so like this even if that happens Wazuh can see it.  
+</br>
+</br>
+Wazuh stores some built-in rules. In order to go there from the dashboard, we click on Wazuh symbol on top and choose management and then rules, and then we click on manage rules.
+</br>
+</br>
+<table>
+  <tr>  
+    <td><img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/70862a6c-0849-4f92-862d-df9d4e4e88b2" alt="Wazuh Rules"/></td>
+    <td><img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/ce0ed86f-f1e9-4a1d-afa1-fe4b7016bc4a" alt="Wazuh Rules"/></td>
+  </tr>
+</table>
+</br>
+</br>
+
+I search for Sysmon and since I am interested in event **id:1**, I click on the eye button to open it. Next I can see a bunch of built-in rules specifically created for event id:1. 
+</br>
+</br>
+<p align="center">
+    Sysmon Rules
+    </br>
+    <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/4a990d7d-ca69-4fc7-9e78-dc433658d82c" height="60%" width="60%" alt="Sysmon Rules"/>
+</br>
+</br>
+    Sysmon id=1 Rules
+    </br>
+    <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/d817a0eb-e83d-40dc-8744-beac773460a0" height="50%" width="50%" alt="Sysmon id1 Rules"/>
+</p>
+</br>
+</br>
+I copy one of these rules and then go back and click on custom rules.
+</br>
+
+![Captura de ecrã 2024-06-08 202123](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/bf8ae640-84f6-4cc4-8263-af3c383126a6)
+</br>
+</br>
+**So lets create a custom rule!**
+</br>
+</br>
+There is a rule file called **local_rules.xml**. I pressed edit and I pasted the rule that I copied before right under the rule that I already see, so we can edit it. **Careful with indentation**. 
+</br>
+I changed the id of the rule to **100002** because custom rules always start from 100000.
+</br>
+For fun, I put the severity level to **15** which is the maximum hehe, the higher the more important it is. 
+</br>
+I deleted the option `no_full_log`. I changed the field name to what we need: `win.eventdata.originalFileName`, and also changed the name of the exe to be detected to **mimikatz**, plus some more changes including description and putting the MITRE technique id **T1003** for credential dumping, that is what mimikatz does.  
+</br>
+</br>
+It should look like this:
+</br>
+
+![Captura de ecrã 2024-06-01 150210](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/853d78ec-32a0-4b77-816e-50794b671c0b)
+</br>
+</br>
+After saving I click the restart button because every time we change a rule we need to restart the manager.
+</br>
+</br>
+**To test this rule I am going to change `mimikatz` name to `svchost`, which is a well-known Windows process, to try to trick Wazuh.**
+</br>
+</br>
+I go back to Powershell and run this time the "disguised" mimikatz, named `svchost.exe`.
+
+![Captura de ecrã 2024-06-01 152110](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/e461b5cc-284f-450d-810e-3bb03b6a6a2c)
+![Captura de ecrã 2024-06-01 152009](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/c596b78f-a083-454f-ac53-433012de132f)
+And as we can see Wazuh triggered an alert,  even though I changed the filename. 
+</br>
+</br>
+We can see more details by opening the alert and checking what I just configured.
+<img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/e9e308d7-df95-4362-b360-228c4073ce95" height="80%" width="80%" alt="Mimikatz alert"/>
+</br>
+</br>
+During an investigation, I can use the hash that is showing to double-check on the Virustotal website. 
+</br>
+
+![Captura de ecrã 2024-06-08 203558](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/4f545d9e-3001-4d66-aea3-26c23ecda667)
+</br>
+</br>
+I used the MD5 hash and I confirm in fact that it is mimikatz.
+</br>
+</br>
+![Captura de ecrã 2024-06-01 153242](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/df5df136-b3b1-4889-b860-003a6f5ea5c7)
+</br>
+</br>
+**So far so good. Next I am going to take care of the automation using Shuffle. And I want to make this Virustotal investigation step automatic and send an email to the analyst.** 
+</br>
+</br>
+## Make it SOAR
 
 
   
