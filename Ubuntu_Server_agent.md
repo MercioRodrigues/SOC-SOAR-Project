@@ -2,7 +2,7 @@
 
 ## Objectives
 
-The objective of this part of the project is: 
+The objectives of this part of the project are: 
 
 - To install and deploy a Wazuh agent on a Ubuntu machine.
 - Push Wazuh alerts level 5 or higher to Shuffle, brute-force login attempts are going to be detected.
