@@ -320,7 +320,7 @@ Awesome! 🙂 And The link works as well! As we can see inside the agent **“ip
 
 The final stage of my SOAR automation project involves sending alerts to TheHive so Analysts can open and manage cases. 
 
-If you follow the Windows 10 VM part on how to add and set up TheHive inside Shuffle you already know how to proceed, you can go back to that <Link to='https://github.com/MercioRodrigues/SOC-SOAR-Project/blob/main/Windows_10_Agent.md#thehive' rel="noopener">Test</Link>
+If you follow the Windows 10 VM part on how to add and set up TheHive inside Shuffle you already know how to proceed, you can go back to that <Link to="https://github.com/MercioRodrigues/SOC-SOAR-Project/blob/main/Windows_10_Agent.md#thehive" rel="noopener">Test</Link>
 if you need a reminder. 
 
 This time I decided to send more information just like I did for the email to send to the Analyst.
