@@ -1,5 +1,7 @@
 # Ubuntu Server agent
 
+## Objectives
+
 The objective of this part of the project is: 
 
 - To install and deploy a Wazuh agent on a Ubuntu machine.
