@@ -81,7 +81,7 @@ To test if Wazuh is sending alerts to Shuffle, I connect the webhook to the **�
 
 <div style="display: flex; align-items: center;">
   <img align="left" width="200" src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/23b8012b-cfa2-493a-86c1-5379f52d93d6"/>
-  <div style="margin-left: 10px;">On the “Change Me” node I select “Repeat back to me” and on the call I add “Execution Argument”. 
+  <div style="margin-left: 10px;">On the <b>“Change Me”</b> node I select <b>“Repeat back to me”</b> and on the call I add <b>“Execution Argument”</b>. 
   </br>
   </br>
   I save the workflow and press start.
@@ -138,7 +138,7 @@ Since we know already that the webhook is gathering alerts from Wazuh we need to
 </br>
 </br>
 <p align="center">
-   Alert Data
+   Workflow
     </br>
     </br>
     <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/35cd2ed1-d97d-4a69-b9c9-e00611b11c71" height="60%" width="60%" alt="Workflow"/>
@@ -146,10 +146,9 @@ Since we know already that the webhook is gathering alerts from Wazuh we need to
 
 
 **Editing HTTP node:** 
-- Name: I named it Get-API
-- Action: Curl
-- Statement: `curl -u USER:PASSWORD -k -X GET "https://WAZUH-IP:55000/security/user/authenticate?raw_true`
-</br>
+- **Name:** I named it Get-API
+- **Action:** Curl
+- **Statement:** `curl -u USER:PASSWORD -k -X GET "https://WAZUH-IP:55000/security/user/authenticate?raw_true`
 </br>
 The USER and PASSWORD are the Wazuh API username and Password:</br>
 
@@ -158,21 +157,22 @@ The USER and PASSWORD are the Wazuh API username and Password:</br>
 I Replaced WAZUH-IP with my Wazuh manager IP.
 </br>
 </br>
-
+By re-running the workflow I can see the API token that was gathered.
+</br>
+</br>
 **curl** — a heavily used command line tool to make network requests. Shuffle has support for CURL parsing, meaning we can use this command directly to make our action, and
 use the CURL command to log in. 
 The Wazuh API will provide a JWT token upon success.
 </br>
 </br>
 
-**Source:** Wazuh RESTful API authentication Documentation. It can be found on the Wazuh website or inside shuffle within the Wazuh app documentation. 
+**Reference Source:** Wazuh RESTful API authentication Documentation. It can be found on the Wazuh website or inside shuffle within the Wazuh app documentation. 
 </br>
 </br>
 
-**Important Note:** I allowed traffic inbound on port 55000 in my firewall that is protecting the Wazuh server.
+-Important Note:- I allowed traffic inbound on port 55000 in my firewall that is protecting the Wazuh server.
 </br>
 </br>
-By re-running the workflow I can see the API token that was gathered.
 </br>
 </br>
 ### Virustotal
