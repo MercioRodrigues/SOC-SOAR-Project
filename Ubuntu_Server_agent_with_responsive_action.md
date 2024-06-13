@@ -353,3 +353,27 @@ $exec.text \n \n Reputation: \n Malicious: $virustotal_v3_1_copy.body.data.attri
 **Pap:** 2 </br>
 **Flag:** false</br>
 **Date:** `$exec.timestamp`</br>
+
+</br>
+</br>
+Re-running the workflow for the same alert. Accomplishes our TheHive setup.
+</br>
+</br>
+
+![Captura de ecrã 2024-06-07 220506](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/10f09934-1999-470a-895e-c0844299c24b)
+
+![Captura de ecrã 2024-06-07 220528](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/b3316525-d16f-4ebb-801d-936bf7705e6e)
+</br>
+</br>
+
+
+
+## Final Workflow 
+<p align="center">
+</br>
+</br>
+  <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/2a072c46-001e-47ae-a8c4-dc45349f345c" height="70%" width="70%" alt="Final Workflow"/>
+</br>
+</br>
+And this concludes my SOC SOAR Project 🙂
+</p>
