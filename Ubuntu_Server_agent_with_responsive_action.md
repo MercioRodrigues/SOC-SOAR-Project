@@ -77,6 +77,7 @@ Next, instead of integrating a rule on the Wazuh manager configuration file like
 </br>
 </br>
 </br>
+
 ## Let's Shuffle
 </br>
 
@@ -204,6 +205,8 @@ I continue by selecting what action I want, which in this case is **“Get IP ad
 **Ip:** I select **“Execution argument” -> “Scrip”** which generates the output: `$exec.all_fields.data.srcip`
 
 I rerun the workflow to check if everything is well so far. If so we should be able to see a **Success** Status for Virustotal and all the data as well as the stand-out srcip address. 
+</br>
+</br>
 
 ## Responsive action
 In the next step we are going to configure our responsive action, but before that let's add the Wazuh app inside our workflow and connect it to Virustotal for now for testing purposes. 
