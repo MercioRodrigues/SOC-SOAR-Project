@@ -53,25 +53,31 @@ In the `<client>` section of the configuration file, check if the IP address of 
   <server-ip>WAZUH_MANAGER_IP</server-ip>
 </client>
 ```
+</br>
 
-**Important note:** After any change made to the `ossec.conf` it is mandatory to restart `wazuh-manager.service`
-</br>
-</br>
-`systemctl restart wazuh-manager.service`
+> $\color{blue}{Note}$
+> 
+> After any change made to the `ossec.conf` it is mandatory to restart `wazuh-manager.service`
+> 
+> `systemctl restart wazuh-manager.service`
+
 </br>
 </br>
 Just a few minutes later we already have brute force login attempts on our machine and Wazuh does a good job detecting it. 
 
 ![Captura de ecrã 2024-06-03 215606](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/77f91a47-55ab-4f4e-b582-35b0f2a2dd51)
-
-_Note: I created an inbound firewall rule to allow all traffic on port 22 for this machine, so I could have telemetry being generated instantly. I was expecting all these login attempts to happen._
+</br>
+</br>
+> $\color{blue}{Note}$
+>
+> I created an inbound firewall rule to allow all traffic on port 22 for this machine, so I could have telemetry being generated instantly. I was expecting all these login attempts to happen.
 </br>
 </br>
 Next, instead of integrating a rule on the Wazuh manager configuration file like I did for mimikatz in the [Windows VM Agent](https://github.com/MercioRodrigues/SOC-SOAR-Project/blob/main/Windows_10_Agent.md) part of the project, this time I am going to configure Wazuh to send all alerts level 5 or higher to Shuffle. 
 </br>
 </br>
-## Let's Shuffle
 </br>
+## Let's Shuffle
 </br>
 
 Let's go to Shuffle and create a new Workflow, I add a **Webhook** and copy its hook URL. 
@@ -170,11 +176,15 @@ The Wazuh API will provide a JWT token upon success.
 </br>
 </br>
 
--Important Note:- I allowed traffic inbound on port 55000 in my firewall that is protecting the Wazuh server.
+> $\color{red}{Important}$
+> 
+> I allowed traffic inbound on port 55000 in my firewall that is protecting the Wazuh server.
+
 </br>
 </br>
 </br>
 </br>
+
 ### Virustotal
 Next, I will add Virustotal to extract the source IP and use intelligence to gather more information about the IP. 
 </br>
@@ -215,19 +225,102 @@ I will configure it and see if everything is working properly with my API token.
   <div style="margin-left: 10px;"></br></br><b>Apikey:</b> Autocomplete option with “HTTP”. In my case, I had named it “Get-API” before.  
   </br>
   </br>
-  </br>  
   <b>URL:</b> https://wazuh_manager_IP:55000 —- I placed my public Wazuh manager IP address.
   </br>
   </br> 
-  <b>Agents list:</b> Every Wazuh agent has an id associated to it, for example, in this lab my Ubuntu machine has an id of User02. I autocomplete this field with the agent id execution argument.
+  <b>Agents list:</b> Every Wazuh agent has an id associated to it, for example, in this lab my Ubuntu machine has an id of "User02". I autocomplete this field with the agent id execution argument.
     </br> 
-    <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/5a4f7c21-1d33-4904-8dd5-ad75f1b9e16a" height="10%" width="10%" alt="Agent Id"/>
-    </br> 
-    <pre style="background-color: rgba(0, 0, 0, 0.3); padding: 10px; border-radius: 5px; color: #ddd;">$exec.all_fields.agent.id</pre>
+    </br>
+      <div style="display: flex; align-items: center;">
+        <img align="left" height="18%" width="18%" src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/5a4f7c21-1d33-4904-8dd5-ad75f1b9e16a"/>  
+        </br>
+        </br>
+        <code>$exec.all_fields.agent.id</code>
 </div>
 </br>
 </br>
+</br>
+</br>
+</br>
+</br>
+</br>
 
-!
+Before filling the **Command** parameter I need to go to Wazuh manager and edit the `ossec.conf` file and setup an active response. 
+</br>
+</br>
+Inside the config file below the `<Active Response>` tag we can see several commands tags, what these do is in case a condition is met, do a specific command (action).
+</br>
+</br>
+I am interested in the **firewall-drop** command. This command will essentially modify the IP tables of our Ubuntu machine, resulting in dropping the traffic from the IP. 
+</br>
+</br>
+I need to add below the last command an active response tag with the command that we want to run. 
+```
+<active-response>
+  <command>firewall-drop</command>
+  <location>local</location>
+  <level>5</level>
+  <timeout>no</timeout>
+</active-response>
+```
+</br>
+Save and restart `Wazuh-manager.service`
+</br>
+</br>
+Let's go back to the Wazuh node in Shuffle and now we can change the following parameters:
 
+- **Command:** `firewall-drop0`  The 0 is because we chose no timeout. For active responses regarding APIs, the command name appends the timeout value.  
 
+- **Alert:** `{"data":{"srcip":"$exec.all_fields.data.srcip"}}`  _Ref: After running some tests and checking the active response logs, I saw that what comes after the alert parameter was something like: 
+`“alerts”: {"data":{"srcip":"xxx.xxx.xxx.xxx"}}`. So I just copied it and inside the alert field, and where you see **“x”** I added an  **“Execution Argument”** that is the **“srcip”**._
+
+</br>
+</br>
+
+### User Input
+The next step in configuring my responsive action is to insert an **“User input”** inside our workflow between Virustotal and Wazuh, that way we send an email to the **Soc analyst** with information and links to Block the IP address, or not if desired. 
+</br>
+</br>
+<p align="center">
+   Workflow
+    </br>
+    </br>
+    <img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/18800784-563b-4f34-b195-ce39263cddca" height="60%" width="60%" alt="Workflow"/>
+</p>
+</br>
+</br>
+
+After selecting the **“User input”** node, I chose the email option, filled in the email address desired, and edited the **information** parameter sent to the Analyst.
+</br>
+</br>
+In my particular case, I wanted for the purpose of this test to send via email the alert text and Virustotal reputation check:
+
+```
+Detected: "$exec.text Reputation:
+Malicious: $virustotal_v3_1_copy.body.data.attributes.last_analysis_stats.malicious
+Suspicious: $virustotal_v3_1_copy.body.data.attributes.last_analysis_stats.suspicious
+Undetected: $virustotal_v3_1_copy.body.data.attributes.last_analysis_stats.undetected
+harmless: $virustotal_v3_1_copy.body.data.attributes.last_analysis_stats.harmless"
+Would you like to block this Srcip? $exec.all_fields.data.srcip
+```
+</br>
+</br>
+After rerunning the workflow, a sample of what the security analyst receives looks like this:
+
+![Captura de ecrã 2024-06-07 205844](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/4c17cb94-f499-4929-966e-90f6eb805205)
+
+<img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/5f52005e-c85e-4f99-a5a5-545ce3f0ffaa" height="30%" width="30%" alt="Workflow"/>
+
+Awesome! 🙂 And The link works as well! As we can see inside the agent **“iptables”**.
+
+![Captura de ecrã 2024-06-07 210420](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/cef4c45a-53c4-4d8a-8d63-af5db3337a2e)
+</br>
+</br>
+## TheHive
+
+The final stage of my SOAR automation project involves sending alerts to TheHive so Analysts can open and manage cases. 
+
+If you follow the first part on how to add and set up TheHive inside Shuffle you already know how to proceed, you can go back to that [part](https://github.com/MercioRodrigues/SOC-SOAR-Project/blob/main/Windows_10_Agent.md=1#L496) if you need a reminder. 
+
+This time I decided to send more information just like I did for the email to send to the Analyst.
+Inside the **Summary** parameter:
