@@ -356,7 +356,7 @@ $exec.text \n \n Reputation: \n Malicious: $virustotal_v3_1_copy.body.data.attri
 
 </br>
 </br>
-Re-running the workflow for the same alert. Accomplishes our TheHive setup.
+Re-running the workflow for the same alert. Accomplishes my TheHive setup.
 </br>
 </br>
 
