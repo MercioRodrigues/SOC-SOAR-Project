@@ -309,7 +309,7 @@ After rerunning the workflow, a sample of what the security analyst receives loo
 
 ![Captura de ecrã 2024-06-07 205844](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/4c17cb94-f499-4929-966e-90f6eb805205)
 
-<img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/5f52005e-c85e-4f99-a5a5-545ce3f0ffaa" height="30%" width="30%" alt="Workflow"/>
+<img src="https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/fa82bf0d-21b4-4a1a-8f3f-2db552ed8a3f" height="30%" width="30%" alt="Workflow"/>
 
 Awesome! 🙂 And The link works as well! As we can see inside the agent **“iptables”**.
 
@@ -320,8 +320,36 @@ Awesome! 🙂 And The link works as well! As we can see inside the agent **“ip
 
 The final stage of my SOAR automation project involves sending alerts to TheHive so Analysts can open and manage cases. 
 
-If you follow the Windows 10 VM part on how to add and set up TheHive inside Shuffle you already know how to proceed, you can go back to that <a href="Windows_10_Agent.md#thehive" target="_blank">TheHive section</a>
-if you need a reminder. 
+If you follow the Windows 10 VM part on how to add and set up TheHive inside Shuffle you already know how to proceed, you can go back to <a href="Windows_10_Agent.md#thehive" target="_blank">TheHive section</a> **(open in a new tab)**
+if you need a reminder. Otherwise you can skip that and see below what parameters i am changing for this configuration. 
 
 This time I decided to send more information just like I did for the email to send to the Analyst.
-Inside the **Summary** parameter:
+</br>
+**Summary parameter:**
+</br>
+
+```
+$exec.text \n \n Reputation: \n Malicious: $virustotal_v3_1_copy.body.data.attributes.last_analysis_stats.malicious \n Suspicious: $virustotal_v3_1_copy.body.data.attributes.last_analysis_stats.suspicious \n Undetected: $virustotal_v3_1_copy.body.data.attributes.last_analysis_stats.undetected \n harmless: $virustotal_v3_1_copy.body.data.attributes.last_analysis_stats.harmless
+```
+</br>
+</br>
+
+**Tags:** For this one, I decided to include the MITRE technique names. `["$exec.all_fields.rule.mitre.technique.#"]` 
+</br>
+</br>
+
+**Sourceref:** Different from the Windows agent part of the project, I decided to use the timestamp as a reference so I can receive alerts with different receiving times, alerts with the same timestamp will not create duplicates. 
+`Incident-$exec.timestamp`
+</br>
+</br>
+
+**Description:** Suspicious activity detected: `$exec.all_fields.rule.description`</br>
+**Type:** Internal</br>
+**Tlp:** 2</br>
+**Title:** `$exec.title`</br>
+**Status:** New</br>
+**Source**: Wazuh</br>
+**Severity:** 2</br>
+**Pap:** 2 </br>
+**Flag:** false</br>
+**Date:** `$exec.timestamp`</br>
