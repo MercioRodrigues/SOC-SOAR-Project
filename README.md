@@ -3,7 +3,7 @@
 ## Objective
 
 
-The objective of this project was to set up and configure a Security Operations Center (SOC) using Wazuh and TheHive for monitoring and responding to security incidents. Using Shuffle, the project involved creating a scalable, automated security monitoring system capable of detecting and responding to threats.
+The objective of this project was to set up and configure a Security Operations Center (SOC) using Wazuh and TheHive for monitoring and responding to security incidents. Using Shuffle, the project evolved creating a scalable, automated security monitoring system capable of detecting and responding to threats.
 
 
 ### Skills Learned
