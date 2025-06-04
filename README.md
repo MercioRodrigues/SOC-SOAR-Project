@@ -285,7 +285,8 @@ systemctl status thehive.service
 </br> 
 
 From here if everything is ok I should be able to access Thehive by going to it’s public IP address on port 9000.
-${\color{blue}http://TheHive_ip:9000}$
+
+`http://TheHive_ip:9000`
 
 </br>
 </br>
