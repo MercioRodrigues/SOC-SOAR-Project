@@ -210,12 +210,12 @@ elasticsearch.yml
 #### Configure TheHive
 
 Next, I am going to configure TheHive `application.conf` configuration file itself. 
-But first, let's check the permission of thehive folder `/opt/thp`. I have to make sure that ${\color{blue}thehive}$ user and group have access to the file pass. 
+But first, let's check the permission of thehive folder `/opt/thp`. I have to make sure that thehive user and group have access to the file pass. 
 </br>
 </br>
 ![Captura de ecrã 2024-05-31 162004](https://github.com/MercioRodrigues/SOC-SOAR-Project/assets/172152200/d34e5f59-b33e-46e7-bed8-22cd9abb8a05)
 </br>
-As we can see root has access to ${\color{blue}thehive}$ directory, we need to change this.
+As we can see root has access to thehive directory, we need to change this.
 </br>
 </br>
 I run `chown -R thehive:thehive /opt/thp` and double check with `ls -la /opt/thp`
